@@ -16,4 +16,7 @@
     "url": "https://github.com/zevciu/todoapp/issues"
   },
   "homepage": "https://github.com/zevciu/todoapp#readme"
+  "dependencies": {
+	  "express": "^4.18.2"
+  }
 }
