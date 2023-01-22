@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lista zadań</title>
+  </head>
+  <body>
+    <h1>Lista zadań</h1>
+
+    <!-- Formularz do dodawania zadań -->
+    <form id="add-task-form">
+      <input type="text" id="task-name" placeholder="Nazwa zadania">
+      <button type="submit">Dodaj</button>
+    </form>
+
+    <!-- Tabela z listą zadań -->
+    <table id="task-table">
+      <thead>
+        <tr>
+          <th>Nazwa</th>
+        </tr>
+      </thead>
+      <tbody id="task-list"></tbody>
+    </table>
+
+    <script>
+      // Pobranie formularza i tabeli z HTML
+      const addTaskForm = document.getElementById("add-task-form");
+      const taskList = document.getElementById("task-list");
+
+      // Nasłuchiwanie na submit formularza
+      addTaskForm.addEventListener("submit", event => {
+        event.preventDefault(); // zablokowanie przeładowania strony
+
+        // Pobranie nazwy zadania z inputa
+        const taskName = document.getElementById("task-name").value;
+
+        // Wysłanie zadania na serwer
+        fetch("/tasks", {
+          method: "POST",
+          body: JSON.stringify({ name: taskName }),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+          .then(response => response.json())
+          .then(task => {
+            // Dodanie wiersza do tabeli
+            const row = document.createElement("tr");
+            const nameCell = document.createElement("td");
+            nameCell.textContent = task.name;
+            row.appendChild(nameCell);
+            taskList.appendChild(row);
+          });
+      });
+
+      // Pobieranie zadań z serwera i wyświetlenie ich w tabeli
+      fetch("/tasks")
+        .then(response => response.json())
+        .then(tasks => {
+          tasks.forEach(task => {
+            // Dodanie wiersza do tabeli
+            const row = document.createElement("tr");
+            const nameCell = document.createElement("td");
+            nameCell.textContent = task.name;
+            row.appendChild(nameCell);
+            taskList.appendChild(row);
+          });
+        });
+    </script>
+  </body>
+</html>
